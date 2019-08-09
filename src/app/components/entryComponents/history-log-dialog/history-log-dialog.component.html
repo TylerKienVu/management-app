@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>History Log for Task: {{data.taskName}}</h1>
+<div mat-dialog-content>  
+  <div id="scroll-container">
+    <mat-card class="drag-card" 
+      *ngFor="let rejection of data.rejections">              
+      <mat-card-header>                                  
+        <mat-card-title class="card-title">{{rejection.creationDate.toLocaleDateString()}}</mat-card-title>        
+        <i class="fas fa-trash trash-icon ml-auto mr-3 d-flex align-items-center hvr hvr-grow"
+        (click)="onTrashClick($event)"></i>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="card-content">
+          {{rejection.reason}}
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div mat-dialog-actions>  
+  <button mat-button [mat-dialog-close]="data" color="primary" class="ml-auto">Save</button>  
+  <button mat-button (click)="onNoClick()">Cancel</button>
+</div>

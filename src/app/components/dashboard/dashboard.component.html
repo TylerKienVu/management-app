@@ -1,0 +1,232 @@
+<ng-template #nextPriority let-task="task">
+  <ng-container
+    [ngTemplateOutlet]="task.priority === 2 ? med : high"
+    [ngTemplateOutletContext]="{task:task}">
+  </ng-container> 
+</ng-template>
+
+<ng-template #low>
+    <span class="priority-text">Low-Priority</span>
+</ng-template>
+<ng-template #med>
+    <span class="priority-text">Med-Priority</span>
+</ng-template>
+<ng-template #high>
+    <span class="priority-text">High-Priority</span>
+</ng-template>
+
+<div id="main-content-container">
+  <div id="content-container" class="container-fluid">
+      <div id="cards-container" class="row m-0">
+        <div class="col-sm-4 p-0">
+          <div id="in-progress-container" class="section-container">
+            <div class="section-header">
+              <span class="section-title">In Progress</span>
+              <button mat-button [matMenuTriggerFor]="progressMenu" class="float-right section-menu" data-toggle="tooltip" data-placement="left" title="In Progress Options">
+                <span>
+                  <img class="section-menu-img" src="./assets/imgs/hamburger-menu.png">  
+                </span>
+              </button>
+              <mat-menu #progressMenu="matMenu">
+                <!-- <button mat-menu-item (click)="openAddTaskDialog()">Add Task</button> -->
+
+                <button mat-menu-item [matMenuTriggerFor]="prioritySortMenuInProgress">Sort By Priority</button>
+                <mat-menu #prioritySortMenuInProgress>
+                  <button id="progress-high-to-low-btn" mat-menu-item (click)="sortPriority($event)">High to Low</button>
+                  <button id="progress-low-to-high-btn" mat-menu-item (click)="sortPriority($event)">Low to High</button>
+                </mat-menu>
+
+                <!-- <button mat-menu-item>Clear Tasks in List</button> -->
+              </mat-menu>
+            </div>
+            <div id="in-progress-list" class="drop-list"
+              cdkDropList
+              (cdkDropListDropped)="drop($event)"
+              #inprogress="cdkDropList"              
+              [cdkDropListData]="inProgressTasks"
+              [cdkDropListConnectedTo]="[overdue, completed]">
+              <mat-card class="drag-card" 
+                *ngFor="let task of filteredInProgress"
+                cdkDrag>
+                <div class="card-toolbar">
+                  <div class="priority-header" 
+                  [ngClass]="{'low-priority': task.priority == 1,
+                              'med-priority': task.priority == 2,
+                              'high-priority': task.priority == 3}">
+                    <ng-container
+                      [ngTemplateOutlet]="task.priority === 1 ? low : nextPriority"
+                      [ngTemplateOutletContext]="{task:task}">
+                    </ng-container>                
+                  </div>
+                  <button mat-button [matMenuTriggerFor]="taskMenu" class="float-right section-menu" data-toggle="tooltip" data-placement="left" title="Task Options" (click)="saveTask($event)">
+                    <span>
+                      <img class="section-menu-img" src="./assets/imgs/menu.png">  
+                    </span>
+                  </button>
+                  <mat-menu #taskMenu="matMenu">
+                    <button mat-menu-item (click)="onComplete($event)">Complete</button>
+                    <button mat-menu-item (click)="onReject($event)">Add Rejection</button>
+                    <button mat-menu-item (click)="onView($event)">View Rejections</button>
+                    <button mat-menu-item (click)="onEdit($event)">Edit</button>
+                    <button mat-menu-item (click)="onDelete($event)">Delete</button>
+                  </mat-menu>
+                </div>                
+                <mat-card-header>                                  
+                  <mat-card-title class="card-title">{{task.name}}</mat-card-title>
+                  <mat-card-subtitle class="card-subtitle">Due: {{task.dueDate.toLocaleDateString()}}</mat-card-subtitle>
+                  <!-- <mat-card-subtitle class="card-subtitle">Due: {{getDueDate(task.dueDate)}}</mat-card-subtitle> -->
+                  <mat-card-subtitle class="card-subtitle">Rejections: {{task.rejections.length}} </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <p class="card-content">
+                    {{task.description}}
+                  </p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>          
+        </div>
+
+
+        <div class="col-sm-4 p-0">
+          <div id="over-due-container" class="section-container">
+            <div class="section-header">
+              <span class="section-title">Over Due</span>
+              <button mat-button [matMenuTriggerFor]="dueMenu" class="float-right section-menu" data-toggle="tooltip" data-placement="left" title="Over Due Options">
+                <span>
+                  <img class="section-menu-img" src="./assets/imgs/hamburger-menu.png">  
+                </span>
+              </button>
+              <mat-menu #dueMenu="matMenu">
+                <!-- <button mat-menu-item (click)="openAddTaskDialog()">Add Task</button> -->
+
+                <button mat-menu-item [matMenuTriggerFor]="prioritySortMenuOverdue">Sort By Priority</button>
+                <mat-menu #prioritySortMenuOverdue>
+                  <button id="overdue-high-to-low-btn" mat-menu-item (click)="sortPriority($event)">High to Low</button>
+                  <button id="overdue-low-to-high-btn" mat-menu-item (click)="sortPriority($event)">Low to High</button>
+                </mat-menu>
+
+                <!-- <button mat-menu-item>Clear Tasks in List</button> -->
+              </mat-menu>
+            </div>
+            <div id="over-due-list" class="drop-list"
+              cdkDropList
+              (cdkDropListDropped)="drop($event)"
+              #overdue="cdkDropList"
+              [cdkDropListData]="overDueTasks"
+              [cdkDropListConnectedTo]="[inprogress, completed]">
+
+              <mat-card class="drag-card" *ngFor="let task of filteredOverDue" cdkDrag>
+                <div class="card-toolbar">
+                  <div class="priority-header" 
+                  [ngClass]="{'low-priority': task.priority == 1,
+                              'med-priority': task.priority == 2,
+                              'high-priority': task.priority == 3}">
+                    <ng-container
+                      [ngTemplateOutlet]="task.priority === 1 ? low : nextPriority"
+                      [ngTemplateOutletContext]="{task:task}">
+                    </ng-container>              
+                  </div>
+                  <button mat-button [matMenuTriggerFor]="taskMenu" class="float-right section-menu" data-toggle="tooltip" data-placement="left" title="Task Options" (click)="saveTask($event)">
+                    <span>
+                      <img class="section-menu-img" src="./assets/imgs/menu.png">  
+                    </span>
+                  </button>
+                  <mat-menu #taskMenu="matMenu">
+                    <button mat-menu-item (click)="onComplete($event)">Complete</button>
+                    <button mat-menu-item (click)="onReject($event)">Add Rejection</button>
+                    <button mat-menu-item (click)="onView($event)">View Rejections</button>
+                    <button mat-menu-item (click)="onEdit($event)">Edit</button>
+                    <button mat-menu-item (click)="onDelete($event)">Delete</button>
+                  </mat-menu>
+                </div>                
+                <mat-card-header>                                  
+                  <mat-card-title class="card-title">{{task.name}}</mat-card-title>
+                  <mat-card-subtitle class="card-subtitle">Due: {{task.dueDate.toLocaleDateString()}}</mat-card-subtitle>
+                  <!-- <mat-card-subtitle class="card-subtitle">Due: {{getDueDate(task.dueDate)}}</mat-card-subtitle> -->
+                  <mat-card-subtitle class="card-subtitle">Rejections: {{task.rejections.length}} </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <p class="card-content">
+                    {{task.description}}
+                  </p>
+                </mat-card-content>
+              </mat-card>
+
+            </div>
+          </div> 
+        </div>
+
+
+        <div class="col-sm-4 p-0">
+          <div id="completed-container" class="section-container">
+            <div class="section-header">
+              <span class="section-title">Completed</span>
+              <button mat-button [matMenuTriggerFor]="completedMenu" class="float-right section-menu" data-toggle="tooltip" data-placement="left" title="Completed Options">
+                <span>
+                  <img class="section-menu-img" src="./assets/imgs/hamburger-menu.png">  
+                </span>
+              </button>
+              <mat-menu #completedMenu="matMenu">
+                <!-- <button mat-menu-item (click)="openAddTaskDialog()">Add Task</button> -->
+                
+                <button mat-menu-item [matMenuTriggerFor]="prioritySortMenuCompleted">Sort By Priority</button>
+                <mat-menu #prioritySortMenuCompleted>
+                  <button id="completed-high-to-low-btn" mat-menu-item (click)="sortPriority($event)">High to Low</button>
+                  <button id="completed-low-to-high-btn" mat-menu-item (click)="sortPriority($event)">Low to High</button>
+                </mat-menu>
+
+                <!-- <button mat-menu-item>Clear Tasks in List</button> -->
+              </mat-menu>
+            </div>
+            <div id="completed-list" class="drop-list"
+              cdkDropList
+              (cdkDropListDropped)="drop($event)"
+              #completed="cdkDropList"
+              [cdkDropListData]="completedTasks"
+              [cdkDropListConnectedTo]="[overdue, inprogress]">
+
+              <mat-card class="drag-card" *ngFor="let task of filteredCompleted" cdkDrag>
+                <div class="card-toolbar">
+                  <div class="priority-header" 
+                  [ngClass]="{'low-priority': task.priority == 1,
+                              'med-priority': task.priority == 2,
+                              'high-priority': task.priority == 3}">
+                    <ng-container
+                      [ngTemplateOutlet]="task.priority === 1 ? low : nextPriority"
+                      [ngTemplateOutletContext]="{task:task}">
+                    </ng-container>
+                  </div>
+                  <button mat-button [matMenuTriggerFor]="taskMenu" class="float-right section-menu" data-toggle="tooltip" data-placement="left" title="Task Options" (click)="saveTask($event)">
+                    <span>
+                      <img class="section-menu-img" src="./assets/imgs/menu.png">  
+                    </span>
+                  </button>
+                  <mat-menu #taskMenu="matMenu">
+                    <button mat-menu-item (click)="onUndo($event)">Undo Complete</button>
+                    <button mat-menu-item (click)="onReject($event)">Add Rejection</button>
+                    <button mat-menu-item (click)="onView($event)">View Rejections</button>
+                    <button mat-menu-item (click)="onEdit($event)">Edit</button>
+                    <button mat-menu-item (click)="onDelete($event)">Delete</button>
+                  </mat-menu>
+                </div>                
+                <mat-card-header>                                  
+                  <mat-card-title class="card-title">{{task.name}}</mat-card-title>
+                  <mat-card-subtitle class="card-subtitle">Due: {{task.dueDate.toLocaleDateString()}}</mat-card-subtitle>
+                  <!-- <mat-card-subtitle class="card-subtitle">Due: {{getDueDate(task.dueDate)}}</mat-card-subtitle> -->
+                  <mat-card-subtitle class="card-subtitle">Rejections: {{task.rejections.length}} </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <p class="card-content">
+                    {{task.description}}
+                  </p>
+                </mat-card-content>
+              </mat-card>
+
+            </div>
+          </div> 
+        </div>
+      </div>
+    </div>
+</div>
+

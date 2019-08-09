@@ -1,0 +1,37 @@
+<div id="toolbar-container" class="container-fluid">
+  <div class="row m-0">
+    <div class="col-sm-12 pl-0" id="project-select-container">
+      <mat-form-field id="project-select">
+          <mat-label>Select Project</mat-label>
+          <mat-select panelClass="selectClass" (selectionChange)="selectProjectTrigger($event.value)" #projectSelect>
+          <!-- <mat-select panelClass="selectClass" (selectionChange)="selectProjectTrigger($event.value)" [(ngModel)]="currentProject.name"> -->
+            <mat-option *ngIf="projects.length === 0">No Projects Available</mat-option>
+            <mat-option *ngFor="let project of projects" [value]="project.name">
+              {{project.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button class="btn ml-5 toolbar-btn hvr-grow" (click)=openAddTaskDialog()>
+          <div class="d-flex align-items-center">
+              <i class="fas fa-plus mr-2 button-icon"></i>Add Task
+          </div>          
+        </button>
+        <button class="btn ml-4 toolbar-btn hvr-grow" (click)="openManageProjectDialog()">
+          <div class="d-flex align-items-center">
+              <i class="fas fa-cog mr-2 button-icon"></i>Manage Project
+          </div>            
+        </button>
+        <button class="btn ml-4 toolbar-btn hvr-grow">
+          <div class="d-flex align-items-center">
+              <i class="fas fa-chart-bar mr-2 button-icon"></i>Export Graph
+          </div>            
+        </button>
+        <!-- <button mat-flat-button color="primary" class="ml-5 toolbar-btn hvr-grow">Add Task</button> -->
+        <!-- <button mat-flat-button color="primary" class="ml-2 toolbar-btn hvr-grow">Manage Project</button> -->
+        <i class="fas fa-search ml-5"></i>
+        <mat-form-field id="filter-form" class="ml-1">          
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search for a task...">
+        </mat-form-field>
+    </div>
+  </div>
+</div>
