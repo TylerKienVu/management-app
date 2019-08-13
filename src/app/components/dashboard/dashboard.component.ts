@@ -24,12 +24,12 @@ export class DashboardComponent implements OnInit, ContentComponent {
   currentProject:Project;
   currentTasks:Task[];
 
+  notStartedTasks:Task[] = [];
   inProgressTasks:Task[] = [];
-  overDueTasks:Task[] = [];
   completedTasks:Task[] = [];
 
+  filteredNotStarted:Task[] = [];
   filteredInProgress:Task[] = [];
-  filteredOverDue:Task[] = [];
   filteredCompleted:Task[] = [];
 
   cachedTaskName:string;
@@ -90,17 +90,17 @@ export class DashboardComponent implements OnInit, ContentComponent {
 
   applyFilter(filter:string):void {
     this.filteredInProgress = this.inProgressTasks.filter(this.isFiltered(filter));
-    this.filteredOverDue = this.overDueTasks.filter(this.isFiltered(filter));
+    this.filteredNotStarted = this.notStartedTasks.filter(this.isFiltered(filter));
     this.filteredCompleted = this.completedTasks.filter(this.isFiltered(filter));
   }
 
   clearTasks():void {
     this.currentTasks = [];
     this.inProgressTasks = [];
-    this.overDueTasks = [];
+    this.notStartedTasks = [];
     this.completedTasks = [];
     this.filteredInProgress = [];
-    this.filteredOverDue = [];
+    this.filteredNotStarted = [];
     this.filteredCompleted = [];
   }
 
@@ -108,31 +108,32 @@ export class DashboardComponent implements OnInit, ContentComponent {
     let currDate:Date = new Date();
 
     this.completedTasks = [];
-    this.overDueTasks = [];
+    this.notStartedTasks = [];
     this.inProgressTasks = [];
 
     for (let task of this.currentTasks) {
-      if (task.completed == true) {
+      if (task.completed === true) {
         this.completedTasks.push(task);
       }
-      else if (task.dueDate < currDate) {
-        this.overDueTasks.push(task)
+      else if (task.started === true) {
+        this.inProgressTasks.push(task)
       }
       else {
-        this.inProgressTasks.push(task);
+        this.notStartedTasks.push(task);
       }
     }
   }
 
   initFilters():void {
     this.filteredInProgress = this.inProgressTasks;
-    this.filteredOverDue = this.overDueTasks;
+    this.filteredNotStarted = this.notStartedTasks;
     this.filteredCompleted = this.completedTasks;
   }
 
   drop(event: CdkDragDrop<string[]>):void {
     // If moving in the same list
     if (event.previousContainer === event.container) {
+      // console.log(event.container.data);
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     }
     // Else, moving to a different list
@@ -142,13 +143,32 @@ export class DashboardComponent implements OnInit, ContentComponent {
       let targetTask = this.getTask(nameOfTask);
 
       // Change state of the task depending on where it is dropped
-      targetTask.completed = event.container.id === "completed-list" ? true : false;
+      if (event.container.id === "completed-list") {
+        targetTask.completed = true;
+        targetTask.started = true;
+      } 
+      else if (event.container.id === "in-progress-list") {
+        targetTask.completed = false;
+        targetTask.started = true;
+      }
+      else {
+        targetTask.completed = false;
+        targetTask.started = false;
+      }
+
+      // targetTask.completed = event.container.id === "completed-list" ? true : false;
 
       transferArrayItem(event.previousContainer.data,
                         event.container.data,
                         event.previousIndex,
                         event.currentIndex); 
     }    
+  }
+
+  isOverDue(dueDate:Date):boolean {
+    let currDate = new Date();
+
+    return dueDate < currDate;
   }
 
   isFiltered(filter:string) {
@@ -167,11 +187,11 @@ export class DashboardComponent implements OnInit, ContentComponent {
     else if (btnName === "progress-low-to-high-btn") {
       this.filteredInProgress = this.filteredInProgress.sort(this.lowToHigh);
     }
-    else if (btnName === "overdue-high-to-low-btn") {
-      this.filteredOverDue = this.filteredOverDue.sort(this.highToLow);
+    else if (btnName === "not-started-high-to-low-btn") {
+      this.filteredNotStarted = this.filteredNotStarted.sort(this.highToLow);
     }
     else if (btnName === "overdue-low-to-high-btn") {
-      this.filteredOverDue = this.filteredOverDue.sort(this.lowToHigh);
+      this.filteredNotStarted = this.filteredNotStarted.sort(this.lowToHigh);
     }
     else if (btnName === "completed-high-to-low-btn") {
       this.filteredCompleted = this.filteredCompleted.sort(this.highToLow);

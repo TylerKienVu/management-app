@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, ChangeDetectorRef, NgZone} from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
 import { Project } from '../../models/Project';
 import { Task } from '../../models/Task';
@@ -6,6 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddTaskDialogComponent } from '../entryComponents/add-task-dialog/add-task-dialog.component';
 import { ManageProjectDialogComponent } from '../entryComponents/manage-project-dialog/manage-project-dialog.component';
 import { FileService } from '../../services/file.service';
+
+// TODO: There is a bug with the project select on startup. The value is empty
 
 @Component({
   selector: 'app-project-tool-bar',
@@ -22,7 +24,7 @@ export class ProjectToolBarComponent implements OnInit {
   projects:Project[] = [];
   currentProject:Project;
 
-  constructor(private dashboardService:DashboardService, public dialog:MatDialog, private fileService:FileService, private cdr:ChangeDetectorRef) {
+  constructor(private dashboardService:DashboardService, public dialog:MatDialog, private fileService:FileService, private cdr:ChangeDetectorRef, private ngZone:NgZone) {
     fileService.changeEmitted$.subscribe( changeFlag => {
       console.log("change flag hit");
     });
@@ -98,6 +100,8 @@ export class ProjectToolBarComponent implements OnInit {
         this.selectProjectEvent.emit(this.projects[i]);
 
         // this.cdr.detectChanges();
+        // this.ngZone.run(console.log);
+
         return;
       }
     }
