@@ -14,6 +14,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { FusionChartsModule } from 'angular-fusioncharts';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -30,6 +31,13 @@ import { EditTaskDialogComponent } from './components/entryComponents/edit-task-
 import { RejectionDialogComponent } from './components/entryComponents/rejection-dialog/rejection-dialog.component';
 import { HistoryLogDialogComponent } from './components/entryComponents/history-log-dialog/history-log-dialog.component';
 import { ConfirmationDialogComponent } from './components/entryComponents/confirmation-dialog/confirmation-dialog.component';
+import { GraphDialogComponent } from './components/entryComponents/graph-dialog/graph-dialog.component';
+
+import * as FusionCharts from 'fusioncharts';
+import * as Charts from 'fusioncharts/fusioncharts.charts';
+import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
+
+FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme);
 
 const appRoutes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
@@ -59,7 +67,8 @@ const appRoutes: Routes = [
     EditTaskDialogComponent,
     RejectionDialogComponent,
     HistoryLogDialogComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    GraphDialogComponent
   ],
   entryComponents: [
     AddTaskDialogComponent,
@@ -68,7 +77,8 @@ const appRoutes: Routes = [
     EditTaskDialogComponent,
     RejectionDialogComponent,
     HistoryLogDialogComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    GraphDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -86,7 +96,8 @@ const appRoutes: Routes = [
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FusionChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

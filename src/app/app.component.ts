@@ -47,6 +47,8 @@ export class AppComponent {
       // it works.
       // this.router.navigate(['/dashboard']);
       // this.router.navigate(['/list']);
+
+      // If this isn't run, then the dashboard/list will not update
       this.ngZone.run(console.log);
     }    
   }

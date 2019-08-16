@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>Graph</h1>
+<div mat-dialog-content>  
+  <fusioncharts 
+    [width]="width"
+    [height]="height"
+    [type]="type"
+    [dataFormat]="dataFormat"
+    [dataSource]="dataSource">
+  </fusioncharts>
+</div>
+<div mat-dialog-actions>  
+  <!-- <button mat-button [mat-dialog-close]="data.fields" class="ml-auto" color="primary" [disabled]="taskForm.form.invalid || checkForDuplicateName(data.name)">Create</button>   -->
+  <button mat-button class="ml-auto" (click)="onNoClick()">Close</button>
+</div>

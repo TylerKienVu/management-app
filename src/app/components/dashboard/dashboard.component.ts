@@ -162,6 +162,8 @@ export class DashboardComponent implements OnInit, ContentComponent {
                         event.container.data,
                         event.previousIndex,
                         event.currentIndex); 
+
+      this.fileService.emitChange(true);
     }    
   }
 

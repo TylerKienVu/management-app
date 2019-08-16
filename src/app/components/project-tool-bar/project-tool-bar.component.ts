@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddTaskDialogComponent } from '../entryComponents/add-task-dialog/add-task-dialog.component';
 import { ManageProjectDialogComponent } from '../entryComponents/manage-project-dialog/manage-project-dialog.component';
 import { FileService } from '../../services/file.service';
+import { GraphDialogComponent } from '../entryComponents/graph-dialog/graph-dialog.component';
 
 // TODO: There is a bug with the project select on startup. The value is empty
 
@@ -20,13 +21,15 @@ export class ProjectToolBarComponent implements OnInit {
   @Output() addTaskEvent:EventEmitter<Task> = new EventEmitter<Task>();
   @Output() allProjectsEvent:EventEmitter<Project[]> = new EventEmitter<Project[]>();
   @Output() clearViewEvent:EventEmitter<null> = new EventEmitter<null>();
+  @Output() writeToFileEvent:EventEmitter<null> = new EventEmitter<null>();
   @ViewChild('projectSelect', {static:false}) projectSelect;
   projects:Project[] = [];
   currentProject:Project;
 
   constructor(private dashboardService:DashboardService, public dialog:MatDialog, private fileService:FileService, private cdr:ChangeDetectorRef, private ngZone:NgZone) {
     fileService.changeEmitted$.subscribe( changeFlag => {
-      console.log("change flag hit");
+      // Whenever there is a change that neesd to be saved, it will hit here
+      this.writeToFileEvent.emit();
     });
   }
 
@@ -94,14 +97,15 @@ export class ProjectToolBarComponent implements OnInit {
     for(let i = 0; i < this.projects.length; i++) {
       if (this.projects[i].name === value) {
         this.currentProject = this.projects[i];
-        this.projectSelect.value = this.currentProject.name;
+
+        // This is required to update the value display in the project dropdown
+        // This is the only thing that I found to work
+        this.ngZone.run(() => {
+          this.projectSelect.value = this.currentProject.name;
+        })
 
         // Send event to parent component to update header and dash
         this.selectProjectEvent.emit(this.projects[i]);
-
-        // this.cdr.detectChanges();
-        // this.ngZone.run(console.log);
-
         return;
       }
     }
@@ -142,6 +146,18 @@ export class ProjectToolBarComponent implements OnInit {
         this.currentProject.priority = result.priority;
         this.currentProject.dueDate = result.dueDate;
       }      
+    })
+  }
+
+  openGraphDialog():void {
+    const dialogRef = this.dialog.open(GraphDialogComponent, {
+      data: this.currentProject
+    })
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result != undefined) {
+        console.log("graph callback");
+      }
     })
   }
 

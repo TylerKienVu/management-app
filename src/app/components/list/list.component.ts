@@ -86,7 +86,6 @@ export class ListComponent implements OnInit, ContentComponent {
     }    
   }
 
-  // TODO: Add check to make sure that duplicate tasks aren't made
   // The JSON file is being updated in app.component.ts so a change event isn't needed here
   addTask(task:Task):void {
     this.currentTasks.push(task);
