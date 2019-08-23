@@ -4,7 +4,8 @@ var electron_1 = require("electron");
 var path = require("path");
 var url = require("url");
 var win;
-var filePath = __dirname + "\\..\\..\\src\\assets\\data\\data.json";
+var filePath = __dirname + "\\..\\..\\data.json";
+// const filePath:string = __dirname + "\\..\\..\\src\\assets\\data\\data.json";
 var fs = require('fs');
 electron_1.app.on('ready', createWindow);
 electron_1.app.on('activate', function () {
@@ -46,7 +47,7 @@ function createWindow() {
         }
     });
     win.loadURL(url.format({
-        pathname: path.join(__dirname, "/../../dist/manager-app/index.html"),
+        pathname: path.join(__dirname, "/../../angular_build/index.html"),
         protocol: 'file:',
         slashes: true
     }));

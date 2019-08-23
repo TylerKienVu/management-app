@@ -3,7 +3,8 @@ import * as path from 'path'
 import * as url from 'url'
 
 let win: BrowserWindow;
-const filePath:string = __dirname + "\\..\\..\\src\\assets\\data\\data.json";
+const filePath:string = __dirname + "\\..\\..\\data.json";
+// const filePath:string = __dirname + "\\..\\..\\src\\assets\\data\\data.json";
 const fs = require('fs');
 
 app.on('ready', createWindow);
@@ -55,7 +56,7 @@ function createWindow() {
     })
 
     win.loadURL(url.format({
-        pathname: path.join(__dirname, "/../../dist/manager-app/index.html"),
+        pathname: path.join(__dirname, "/../../angular_build/index.html"),
         protocol: 'file:',
         slashes: true
     }))

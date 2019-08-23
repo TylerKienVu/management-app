@@ -1,6 +1,8 @@
 {
   "name": "manager-app",
-  "version": "0.0.0",
+  "description": "A task management app",
+  "version": "0.1.0",
+  "author": {"name": "Tyler"},
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -8,7 +10,19 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "electron": "ng build --base-href ./ && tsc --p electron && electron ."
+    "electron": "ng build --base-href ./ && tsc --p electron && electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build":{
+    "productName": "ManagerApp",
+    "appId": "com.electron.manager-app",
+    "files": [
+      "data.json",
+      "electron",
+      "angular_build"
+    ]
   },
   "private": true,
   "dependencies": {
@@ -43,6 +57,7 @@
     "@types/node": "~8.9.4",
     "codelyzer": "^5.0.1",
     "electron": "^5.0.7",
+    "electron-builder": "^21.2.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~3.1.1",

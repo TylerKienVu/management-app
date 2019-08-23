@@ -28,8 +28,13 @@ export class ProjectToolBarComponent implements OnInit {
 
   constructor(private dashboardService:DashboardService, public dialog:MatDialog, private fileService:FileService, private cdr:ChangeDetectorRef, private ngZone:NgZone) {
     fileService.changeEmitted$.subscribe( changeFlag => {
-      // Whenever there is a change that neesd to be saved, it will hit here
-      this.writeToFileEvent.emit();
+      this.writeToFile();
+      this.allProjectsEvent.emit()
+      this.selectProjectEvent.emit(this.currentProject);
+      // console.log("hit save");
+      // this.allProjectsEvent.emit(this.projects);
+      // // Whenever there is a change that neesd to be saved, it will hit here
+      // this.writeToFileEvent.emit();
     });
   }
 
@@ -50,6 +55,8 @@ export class ProjectToolBarComponent implements OnInit {
 
     // Send out event to allow other components to access the list of projects
     this.allProjectsEvent.emit(this.projects);
+
+    this.fileService.emitChange(true);
   }
 
   // This is the entry point for the application
@@ -81,6 +88,8 @@ export class ProjectToolBarComponent implements OnInit {
     }
 
     this.initDashboard();
+
+    this.fileService.emitChange(true)
   }
 
   initDashboard():void {
@@ -137,7 +146,7 @@ export class ProjectToolBarComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if(result != undefined) {
         if (result === "Delete") {
-          this.deleteCurrentProject();
+          this.deleteCurrentProject();        
           return;
         }
 
@@ -145,6 +154,8 @@ export class ProjectToolBarComponent implements OnInit {
         this.currentProject.description = result.description;
         this.currentProject.priority = result.priority;
         this.currentProject.dueDate = result.dueDate;
+
+        this.fileService.emitChange(true);
       }      
     })
   }
@@ -161,11 +172,6 @@ export class ProjectToolBarComponent implements OnInit {
     })
   }
 
-  // writeToFile():void {
-  //   let jsonData:string = JSON.stringify(this.projects);
-  //   this.fileService.writeToFile(jsonData);
-  // }
-
   // This function is so that json date string can be caught and converted back to a date object
   dateTimeReviver = function (key, value) {
     var reDateDetect = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/;
@@ -174,6 +180,11 @@ export class ProjectToolBarComponent implements OnInit {
       return new Date(value);
     }
     return value;
+  }
+
+  writeToFile():void {
+    let jsonData:string = JSON.stringify(this.projects);
+    this.fileService.writeToFile(jsonData);
   }
 
 }

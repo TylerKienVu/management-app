@@ -17,8 +17,18 @@ function createWindow () {
     }
   })
 
+  // const startUrl = process.env.ELECTRON_START_URL || url.format({
+  //   pathname: path.join(__dirname, '/dist/index.html'),
+  //   protocol: 'file:',
+  //   slashes: true
+  // });
+  // mainWindow.loadURL(startUrl);
+
   // and load the index.html of the app.
-  win.loadFile('dist/manager-app/index.html')
+  var indexPath = path.resolve(__dirname, '../angular_build/index.html');
+  win.loadURL(indexPath);
+  // win.loadFile('dist/manager-app/index.html')
+  
 
   win.removeMenu()
 
