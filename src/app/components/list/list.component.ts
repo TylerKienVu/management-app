@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit, ContentComponent {
-  displayedColumns: string[] = ['name', 'description', 'owner', 'priority', 'dueDate', 'age', 'rejectedCount','status', 'actions'];
+  displayedColumns: string[] = ['name', 'description', 'owner', 'priority', 'creationAge', 'dueDate', 'overdueAge', 'rejectedCount','status', 'actions'];
   currentProject:Project = null;
   currentTasks:Task[] = null;
   dataSource:any;
@@ -44,8 +44,13 @@ export class ListComponent implements OnInit, ContentComponent {
 
     // Teaches the sorting algorithm for specific headers
     this.dataSource.sortingDataAccessor = (item,property) => {
-      if (property === 'age') {
-        return this.getAge(item.dateCreated)
+      if (property === 'creationAge') {
+        let ageString:string =  this.getCreationAge(item.dateCreated);
+        return this.extractDays(ageString);
+      }
+      else if (property === 'overdueAge') {
+        let ageString:string =  this.getOverdueAge(item.dueDate, item.completed);
+        return this.extractDays(ageString);
       }
       else if (property === 'status') {
         return this.getStatusValue(item);
@@ -122,9 +127,23 @@ export class ListComponent implements OnInit, ContentComponent {
   applyFilter(value:string) {
     console.log(value);
     this.dataSource.filter = value.trim().toLowerCase();
+  } 
+
+  getOverdueAge(dueDate:Date, completed:Boolean):string {
+    if(completed) return "0 days";
+    
+    let currDate:Date = new Date();
+
+    var diff = currDate.getTime() - dueDate.getTime();
+    if (diff < 0) {
+      return "0 days"
+    }
+
+    var diffDays = Math.ceil(Math.abs(diff) / (1000 * 3600 * 24));
+    return diffDays + " days";
   }
 
-  getAge(creationDate:Date):string {
+  getCreationAge(creationDate:Date):string {
     let currDate:Date = new Date();
 
     var diff = Math.abs(creationDate.getTime() - currDate.getTime());
@@ -169,14 +188,18 @@ export class ListComponent implements OnInit, ContentComponent {
 
   onComplete(event:any):void {
     if (this.cachedTaskName != undefined) {
-      this.getTask(this.cachedTaskName).completed = true;
+      let targetTask:Task = this.getTask(this.cachedTaskName);
+      targetTask.completed = true;
+      targetTask.completionDate = new Date();
       this.fileService.emitChange(true);
     }
   }
 
   onUndoComplete(event:any):void {
     if (this.cachedTaskName != undefined) {
-      this.getTask(this.cachedTaskName).completed = false;
+      let targetTask:Task = this.getTask(this.cachedTaskName);
+      targetTask.completed = false;
+      targetTask.completionDate = null;
       this.fileService.emitChange(true);
     }
   }
@@ -284,5 +307,12 @@ export class ListComponent implements OnInit, ContentComponent {
 
   clearView():void {
     this.recieveState(null);
+  }
+
+  extractDays(dayString:string):number {
+    let ageString:string =  dayString;
+    let indexSlice:number = ageString.indexOf(" days");
+    let days:number = Number.parseInt(ageString.slice(0, indexSlice));
+    return days;
   }
 }

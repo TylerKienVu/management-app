@@ -64,6 +64,11 @@ export class ProjectToolBarComponent implements OnInit {
   getProjects():void {
     // This function will retrieve the data and use the callback function below
     this.fileService.readFile(this);
+    
+    // TESTING
+    // this.projects = this.dashboardService.getProjects();
+    // this.allProjectsEvent.emit(this.projects);
+    // this.initDashboard();
   }
 
   getProjectsCallback(data:string):void {

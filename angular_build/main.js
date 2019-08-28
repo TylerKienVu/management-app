@@ -73,7 +73,7 @@ module.exports = "<h1 mat-dialog-title>Edit Task in Project: {{data.project.name
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h1 mat-dialog-title>Graph</h1>\n<div mat-dialog-content>  \n  <fusioncharts \n    [width]=\"width\"\n    [height]=\"height\"\n    [type]=\"type\"\n    [dataFormat]=\"dataFormat\"\n    [dataSource]=\"dataSource\">\n  </fusioncharts>\n</div>\n<div mat-dialog-actions>  \n  <!-- <button mat-button [mat-dialog-close]=\"data.fields\" class=\"ml-auto\" color=\"primary\" [disabled]=\"taskForm.form.invalid || checkForDuplicateName(data.name)\">Create</button>   -->\n  <button mat-button class=\"ml-auto\" (click)=\"onNoClick()\">Close</button>\n</div>\n"
+module.exports = "<div mat-dialog-content>  \n  <mat-form-field>\n    <mat-label>\n      Graph Year\n    </mat-label>\n    <mat-select (selectionChange)=\"onSelectionChange($event.value)\" [(ngModel)]=\"currentYear\">\n      <mat-option *ngFor=\"let year of validYears\" [value]=\"year\">\n        {{year}}\n      </mat-option>\n    </mat-select>\n  </mat-form-field>\n  <fusioncharts \n    [width]=\"width\"\n    [height]=\"height\"\n    [type]=\"type\"\n    [dataFormat]=\"dataFormat\"\n    [dataSource]=\"dataSource\">\n  </fusioncharts>\n</div>\n<div mat-dialog-actions>  \n  <!-- <button mat-button [mat-dialog-close]=\"data.fields\" class=\"ml-auto\" color=\"primary\" [disabled]=\"taskForm.form.invalid || checkForDuplicateName(data.name)\">Create</button>   -->\n  <button mat-button class=\"ml-auto\" (click)=\"onNoClick()\">Close</button>\n</div>\n"
 
 /***/ }),
 
@@ -128,7 +128,7 @@ module.exports = "<nav id=\"header\" class=\"navbar navbar-expand-lg navbar-ligh
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ng-template #nextPriority let-task=\"task\">\n  <ng-container\n    [ngTemplateOutlet]=\"task.priority === 2 ? med : high\"\n    [ngTemplateOutletContext]=\"{task:task}\">\n  </ng-container> \n</ng-template>\n\n<ng-template #low>\n    <span class=\"priority-text\">Low-Priority</span>\n</ng-template>\n<ng-template #med>\n    <span class=\"priority-text\">Med-Priority</span>\n</ng-template>\n<ng-template #high>\n    <span class=\"priority-text\">High-Priority</span>\n</ng-template>\n\n<div id=\"main-content-container\">\n  <div id=\"table-container\" class=\"mx-auto\">\n    <table id=\"data-table\" mat-table [dataSource]=\"dataSource\" class=\"mat-elevation-z8\" matSort>\n        <ng-container matColumnDef=\"name\">\n          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>\n          <td mat-cell *matCellDef=\"let task\" id=\"name-cell\">{{task.name}}</td>\n        </ng-container>\n\n        <ng-container matColumnDef=\"description\">\n          <th mat-header-cell *matHeaderCellDef class=\"description\" mat-sort-header>Description</th>\n          <td mat-cell *matCellDef=\"let task\" class=\"description\">{{shortenDescription(task.description)}}</td>\n        </ng-container>\n\n        <ng-container matColumnDef=\"owner\">\n            <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner</th>\n            <td mat-cell *matCellDef=\"let task\">{{task.owner}}</td>\n          </ng-container>\n    \n        <ng-container matColumnDef=\"dueDate\">\n          <th mat-header-cell *matHeaderCellDef mat-sort-header>Due Date</th>\n          <td mat-cell *matCellDef=\"let task\">{{task.dueDate.toLocaleDateString()}}</td>\n          <!-- <td mat-cell *matCellDef=\"let task\">{{ getDueDate(task.dueDate) }}</td> -->\n        </ng-container>\n    \n        <ng-container matColumnDef=\"age\">\n          <th mat-header-cell *matHeaderCellDef mat-sort-header>Age</th>\n          <td mat-cell *matCellDef=\"let task\" >{{getAge(task.dateCreated)}}</td>\n        </ng-container>    \n    \n        <ng-container matColumnDef=\"priority\">\n          <th mat-header-cell *matHeaderCellDef mat-sort-header>Priority</th>\n          <td mat-cell *matCellDef=\"let task\" >\n            <div class=\"priority-header\" \n            [ngClass]=\"{'low-priority': task.priority == 1,\n                        'med-priority': task.priority == 2,\n                        'high-priority': task.priority == 3}\">\n              <ng-container\n                [ngTemplateOutlet]=\"task.priority === 1 ? low : nextPriority\"\n                [ngTemplateOutletContext]=\"{task:task}\">\n              </ng-container>                \n            </div>\n          </td>\n        </ng-container>\n    \n        <ng-container matColumnDef=\"rejectedCount\">\n          <th mat-header-cell *matHeaderCellDef mat-sort-header>Rejected Count</th>\n          <td mat-cell *matCellDef=\"let task\" >{{task.rejections.length}}</td>\n        </ng-container>\n    \n        <ng-container matColumnDef=\"status\">\n          <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>\n          <td mat-cell *matCellDef=\"let task\">\n            <ng-container\n              [ngTemplateOutlet]=\"task.completed === true ? completed : otherStatuses\"\n              [ngTemplateOutletContext]=\"{task:task}\">\n            </ng-container>\n\n            <ng-template #completed>\n              <i class=\"fas fa-check\" style=\"color:green; font-size: 20px\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Completed\"></i>\n            </ng-template>\n\n            <ng-template #otherStatuses let-task=\"task\">\n                <i class=\"fas fa-spinner mx-1\" style=\"color:orange; font-size: 20px\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"In Progress\"\n                *ngIf=\"task.started === true\"></i>\n                <i class=\"fas fa-times mx-1\" style=\"color:red; font-size: 20px\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Not Started\"\n                *ngIf=\"task.started === false\"></i>\n                <i class=\"far fa-clock mx-1\" style=\"color:red; font-size: 20px\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Overdue\"\n                *ngIf=\"isOverDue(task.dueDate)\"></i>\n            </ng-template>\n          </td>\n        </ng-container>\n\n        <ng-container matColumnDef=\"actions\">\n          <th mat-header-cell *matHeaderCellDef class=\"centered\" mat-sort-header></th>\n          <td mat-cell *matCellDef=\"let task\" class=\"centered\">\n            <button mat-button [matMenuTriggerFor]=\"taskMenu\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Task Options\" (click)=\"saveRow($event)\">\n              <i class=\"fas fa-ellipsis-v\"></i>\n            </button>     \n            <mat-menu #taskMenu=\"matMenu\">\n              <ng-container\n                [ngTemplateOutlet]=\"task.completed === true ? undoOption : completeOption\">\n              </ng-container>\n\n              <ng-template #completeOption>\n                <button mat-menu-item (click)=\"onComplete($event)\">Complete</button>\n                <ng-container\n                  [ngTemplateOutlet]=\"task.started === true ? unstart : start\">\n                </ng-container>\n                <ng-template #start>\n                  <button mat-menu-item (click)=\"onStart($event)\">Mark as Started</button>\n                </ng-template>     \n                <ng-template #unstart>\n                  <button mat-menu-item (click)=\"onUndoStart($event)\">Mark as Not Started</button>\n                </ng-template> \n              </ng-template>    \n\n              <ng-template #undoOption>\n                <button mat-menu-item (click)=\"onUndoComplete($event)\">Undo Complete</button>\n              </ng-template>         \n\n              <button mat-menu-item (click)=\"onReject($event)\">Add Rejection</button>\n              <button mat-menu-item (click)=\"onView($event)\">View Rejections</button>           \n              <button mat-menu-item (click)=\"onEdit($event)\">Edit</button>\n              <button mat-menu-item (click)=\"onDelete($event)\">Delete</button>\n            </mat-menu>       \n          </td>\n        </ng-container>\n    \n        <tr mat-header-row *matHeaderRowDef=\"displayedColumns; sticky: true\"></tr>\n        <tr mat-row *matRowDef=\"let row; columns: displayedColumns;\"></tr>\n      </table>\n  </div>\n</div>\n"
+module.exports = "<ng-template #nextPriority let-task=\"task\">\n  <ng-container\n    [ngTemplateOutlet]=\"task.priority === 2 ? med : high\"\n    [ngTemplateOutletContext]=\"{task:task}\">\n  </ng-container> \n</ng-template>\n\n<ng-template #low>\n    <span class=\"priority-text\">Low-Priority</span>\n</ng-template>\n<ng-template #med>\n    <span class=\"priority-text\">Med-Priority</span>\n</ng-template>\n<ng-template #high>\n    <span class=\"priority-text\">High-Priority</span>\n</ng-template>\n\n<div id=\"main-content-container\">\n  <div id=\"table-container\" class=\"mx-auto\">\n    <table id=\"data-table\" mat-table [dataSource]=\"dataSource\" class=\"mat-elevation-z8\" matSort>\n        <ng-container matColumnDef=\"name\">\n          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>\n          <td mat-cell *matCellDef=\"let task\" id=\"name-cell\">{{task.name}}</td>\n        </ng-container>\n\n        <ng-container matColumnDef=\"description\">\n          <th mat-header-cell *matHeaderCellDef class=\"description\" mat-sort-header>Description</th>\n          <td mat-cell *matCellDef=\"let task\" class=\"description\">{{shortenDescription(task.description)}}</td>\n        </ng-container>\n\n        <ng-container matColumnDef=\"owner\">\n            <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner</th>\n            <td mat-cell *matCellDef=\"let task\">{{task.owner}}</td>\n          </ng-container>\n\n        <ng-container matColumnDef=\"creationAge\">\n          <th mat-header-cell *matHeaderCellDef mat-sort-header>Age (Creation)</th>\n          <td mat-cell *matCellDef=\"let task\" >{{getCreationAge(task.dateCreated)}}</td>\n        </ng-container>    \n    \n        <ng-container matColumnDef=\"dueDate\">\n          <th mat-header-cell *matHeaderCellDef mat-sort-header>Due Date</th>\n          <td mat-cell *matCellDef=\"let task\">{{task.dueDate.toLocaleDateString()}}</td>\n        </ng-container>\n    \n        <ng-container matColumnDef=\"overdueAge\">\n          <th mat-header-cell *matHeaderCellDef mat-sort-header>Age (Since Due)</th>\n          <td mat-cell *matCellDef=\"let task\" >{{getOverdueAge(task.dueDate, task.completed)}}</td>\n        </ng-container>    \n    \n        <ng-container matColumnDef=\"priority\">\n          <th mat-header-cell *matHeaderCellDef mat-sort-header>Priority</th>\n          <td mat-cell *matCellDef=\"let task\" >\n            <div class=\"priority-header\" \n            [ngClass]=\"{'low-priority': task.priority == 1,\n                        'med-priority': task.priority == 2,\n                        'high-priority': task.priority == 3}\">\n              <ng-container\n                [ngTemplateOutlet]=\"task.priority === 1 ? low : nextPriority\"\n                [ngTemplateOutletContext]=\"{task:task}\">\n              </ng-container>                \n            </div>\n          </td>\n        </ng-container>\n    \n        <ng-container matColumnDef=\"rejectedCount\">\n          <th mat-header-cell *matHeaderCellDef mat-sort-header>Rejected Count</th>\n          <td mat-cell *matCellDef=\"let task\" >{{task.rejections.length}}</td>\n        </ng-container>\n    \n        <ng-container matColumnDef=\"status\">\n          <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>\n          <td mat-cell *matCellDef=\"let task\">\n            <ng-container\n              [ngTemplateOutlet]=\"task.completed === true ? completed : otherStatuses\"\n              [ngTemplateOutletContext]=\"{task:task}\">\n            </ng-container>\n\n            <ng-template #completed>\n              <i class=\"fas fa-check\" style=\"color:green; font-size: 20px\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Completed\"></i>\n            </ng-template>\n\n            <ng-template #otherStatuses let-task=\"task\">\n                <i class=\"fas fa-spinner mx-1\" style=\"color:orange; font-size: 20px\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"In Progress\"\n                *ngIf=\"task.started === true\"></i>\n                <i class=\"fas fa-times mx-1\" style=\"color:red; font-size: 20px\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Not Started\"\n                *ngIf=\"task.started === false\"></i>\n                <i class=\"far fa-clock mx-1\" style=\"color:red; font-size: 20px\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Overdue\"\n                *ngIf=\"isOverDue(task.dueDate)\"></i>\n            </ng-template>\n          </td>\n        </ng-container>\n\n        <ng-container matColumnDef=\"actions\">\n          <th mat-header-cell *matHeaderCellDef class=\"centered\" mat-sort-header></th>\n          <td mat-cell *matCellDef=\"let task\" class=\"centered\">\n            <button mat-button [matMenuTriggerFor]=\"taskMenu\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Task Options\" (click)=\"saveRow($event)\">\n              <i class=\"fas fa-ellipsis-v\"></i>\n            </button>     \n            <mat-menu #taskMenu=\"matMenu\">\n              <ng-container\n                [ngTemplateOutlet]=\"task.completed === true ? undoOption : completeOption\">\n              </ng-container>\n\n              <ng-template #completeOption>\n                <button mat-menu-item (click)=\"onComplete($event)\">Complete</button>\n                <ng-container\n                  [ngTemplateOutlet]=\"task.started === true ? unstart : start\">\n                </ng-container>\n                <ng-template #start>\n                  <button mat-menu-item (click)=\"onStart($event)\">Mark as Started</button>\n                </ng-template>     \n                <ng-template #unstart>\n                  <button mat-menu-item (click)=\"onUndoStart($event)\">Mark as Not Started</button>\n                </ng-template> \n              </ng-template>    \n\n              <ng-template #undoOption>\n                <button mat-menu-item (click)=\"onUndoComplete($event)\">Undo Complete</button>\n              </ng-template>         \n\n              <button mat-menu-item (click)=\"onReject($event)\">Add Rejection</button>\n              <button mat-menu-item (click)=\"onView($event)\">View Rejections</button>           \n              <button mat-menu-item (click)=\"onEdit($event)\">Edit</button>\n              <button mat-menu-item (click)=\"onDelete($event)\">Delete</button>\n            </mat-menu>       \n          </td>\n        </ng-container>\n    \n        <tr mat-header-row *matHeaderRowDef=\"displayedColumns; sticky: true\"></tr>\n        <tr mat-row *matRowDef=\"let row; columns: displayedColumns;\"></tr>\n      </table>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -1083,35 +1083,113 @@ var GraphDialogComponent = /** @class */ (function () {
         this.type = "mscombi2d";
         this.width = 800;
         this.height = 600;
+        this.validYears = [];
         this.rejectionDict = { "Jan": 0, "Feb": 0, "Mar": 0, "Apr": 0, "May": 0, "Jun": 0, "Jul": 0, "Aug": 0, "Sep": 0, "Oct": 0, "Nov": 0, "Dec": 0 };
+        this.completionDict = { "Jan": 0, "Feb": 0, "Mar": 0, "Apr": 0, "May": 0, "Jun": 0, "Jul": 0, "Aug": 0, "Sep": 0, "Oct": 0, "Nov": 0, "Dec": 0 };
     }
     GraphDialogComponent.prototype.ngOnInit = function () {
-        this.prepareData();
-        this.initChart();
+        this.initValidYears();
+        if (this.validYears.length != 0) {
+            this.prepareData(this.validYears[0]);
+        }
+        this.initChart(this.validYears[0]);
     };
-    GraphDialogComponent.prototype.prepareData = function () {
+    GraphDialogComponent.prototype.initValidYears = function () {
+        var e_1, _a, e_2, _b;
+        var taskList = this.data.tasks;
+        try {
+            for (var taskList_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__values"](taskList), taskList_1_1 = taskList_1.next(); !taskList_1_1.done; taskList_1_1 = taskList_1.next()) {
+                var task = taskList_1_1.value;
+                if (task.completionDate !== null) {
+                    this.appendYearIfMissing(task.completionDate.getFullYear());
+                }
+                try {
+                    for (var _c = tslib__WEBPACK_IMPORTED_MODULE_0__["__values"](task.rejections), _d = _c.next(); !_d.done; _d = _c.next()) {
+                        var rejection = _d.value;
+                        this.appendYearIfMissing(rejection.creationDate.getFullYear());
+                    }
+                }
+                catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                finally {
+                    try {
+                        if (_d && !_d.done && (_b = _c.return)) _b.call(_c);
+                    }
+                    finally { if (e_2) throw e_2.error; }
+                }
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (taskList_1_1 && !taskList_1_1.done && (_a = taskList_1.return)) _a.call(taskList_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+    };
+    GraphDialogComponent.prototype.prepareData = function (targetYear) {
+        this.clearData();
+        this.currentYear = targetYear;
         var taskList = this.data.tasks;
         for (var i = 0; i < taskList.length; i++) {
-            this.addRejectionsForTask(taskList[i].rejections);
+            this.addRejectionsForTask(taskList[i].rejections, targetYear);
+            this.addCompletionForTask(taskList[i].completionDate, targetYear);
         }
     };
-    GraphDialogComponent.prototype.addRejectionsForTask = function (rejectionsList) {
+    GraphDialogComponent.prototype.clearData = function () {
+        this.rejectionDict = { "Jan": 0, "Feb": 0, "Mar": 0, "Apr": 0, "May": 0, "Jun": 0, "Jul": 0, "Aug": 0, "Sep": 0, "Oct": 0, "Nov": 0, "Dec": 0 };
+        this.completionDict = { "Jan": 0, "Feb": 0, "Mar": 0, "Apr": 0, "May": 0, "Jun": 0, "Jul": 0, "Aug": 0, "Sep": 0, "Oct": 0, "Nov": 0, "Dec": 0 };
+    };
+    GraphDialogComponent.prototype.addRejectionsForTask = function (rejectionsList, targetYear) {
         for (var i = 0; i < rejectionsList.length; i++) {
-            this.addRejectionData(rejectionsList[i]);
+            this.addRejectionData(rejectionsList[i], targetYear);
         }
     };
-    GraphDialogComponent.prototype.addRejectionData = function (rejection) {
+    GraphDialogComponent.prototype.addRejectionData = function (rejection, targetYear) {
+        if (rejection.creationDate.getFullYear() !== targetYear) {
+            return;
+        }
         var monthKeys = Object.keys(this.rejectionDict);
         var targetMonth = monthKeys[rejection.creationDate.getMonth()];
         this.rejectionDict[targetMonth]++;
     };
-    GraphDialogComponent.prototype.initChart = function () {
+    GraphDialogComponent.prototype.addCompletionForTask = function (completionDate, targetYear) {
+        if (completionDate === null || completionDate.getFullYear() !== targetYear) {
+            return;
+        }
+        var monthKeys = Object.keys(this.completionDict);
+        var targetMonth = monthKeys[completionDate.getMonth()];
+        this.completionDict[targetMonth]++;
+    };
+    GraphDialogComponent.prototype.appendYearIfMissing = function (targetYear) {
+        var e_3, _a;
+        try {
+            for (var _b = tslib__WEBPACK_IMPORTED_MODULE_0__["__values"](this.validYears), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var year = _c.value;
+                if (year === targetYear) {
+                    return;
+                }
+            }
+        }
+        catch (e_3_1) { e_3 = { error: e_3_1 }; }
+        finally {
+            try {
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+            }
+            finally { if (e_3) throw e_3.error; }
+        }
+        this.validYears.push(targetYear);
+    };
+    GraphDialogComponent.prototype.onSelectionChange = function (year) {
+        this.prepareData(year);
+        this.initChart(year);
+    };
+    GraphDialogComponent.prototype.initChart = function (year) {
         this.dataSource = {
             chart: {
-                caption: 'Rejections Chart',
+                caption: 'Rejections/Completion Chart (' + year + ')',
                 subCaption: 'Safran',
                 xAxisName: 'Month',
-                yAxisName: 'Rejection Count',
+                yAxisName: 'Count',
                 theme: 'fusion',
                 exportEnabled: 1,
                 exportFormats: "PNG|PDF|JPG|SVG"
@@ -1197,6 +1275,47 @@ var GraphDialogComponent = /** @class */ (function () {
                         },
                         {
                             value: this.rejectionDict["Dec"]
+                        }
+                    ]
+                },
+                {
+                    seriesname: "Number of Tasks Completed",
+                    data: [
+                        {
+                            value: this.completionDict["Jan"]
+                        },
+                        {
+                            value: this.completionDict["Feb"]
+                        },
+                        {
+                            value: this.completionDict["Mar"]
+                        },
+                        {
+                            value: this.completionDict["Apr"]
+                        },
+                        {
+                            value: this.completionDict["May"]
+                        },
+                        {
+                            value: this.completionDict["Jun"]
+                        },
+                        {
+                            value: this.completionDict["Jul"]
+                        },
+                        {
+                            value: this.completionDict["Aug"]
+                        },
+                        {
+                            value: this.completionDict["Sep"]
+                        },
+                        {
+                            value: this.completionDict["Oct"]
+                        },
+                        {
+                            value: this.completionDict["Nov"]
+                        },
+                        {
+                            value: this.completionDict["Dec"]
                         }
                     ]
                 },
@@ -1570,7 +1689,7 @@ var ListComponent = /** @class */ (function () {
         this.dialog = dialog;
         this.cdr = cdr;
         this.fileService = fileService;
-        this.displayedColumns = ['name', 'description', 'owner', 'priority', 'dueDate', 'age', 'rejectedCount', 'status', 'actions'];
+        this.displayedColumns = ['name', 'description', 'owner', 'priority', 'creationAge', 'dueDate', 'overdueAge', 'rejectedCount', 'status', 'actions'];
         this.currentProject = null;
         this.currentTasks = null;
     }
@@ -1581,8 +1700,13 @@ var ListComponent = /** @class */ (function () {
         this.dataSource.sort = this.sort;
         // Teaches the sorting algorithm for specific headers
         this.dataSource.sortingDataAccessor = function (item, property) {
-            if (property === 'age') {
-                return _this.getAge(item.dateCreated);
+            if (property === 'creationAge') {
+                var ageString = _this.getCreationAge(item.dateCreated);
+                return _this.extractDays(ageString);
+            }
+            else if (property === 'overdueAge') {
+                var ageString = _this.getOverdueAge(item.dueDate, item.completed);
+                return _this.extractDays(ageString);
             }
             else if (property === 'status') {
                 return _this.getStatusValue(item);
@@ -1644,7 +1768,18 @@ var ListComponent = /** @class */ (function () {
         console.log(value);
         this.dataSource.filter = value.trim().toLowerCase();
     };
-    ListComponent.prototype.getAge = function (creationDate) {
+    ListComponent.prototype.getOverdueAge = function (dueDate, completed) {
+        if (completed)
+            return "0 days";
+        var currDate = new Date();
+        var diff = currDate.getTime() - dueDate.getTime();
+        if (diff < 0) {
+            return "0 days";
+        }
+        var diffDays = Math.ceil(Math.abs(diff) / (1000 * 3600 * 24));
+        return diffDays + " days";
+    };
+    ListComponent.prototype.getCreationAge = function (creationDate) {
         var currDate = new Date();
         var diff = Math.abs(creationDate.getTime() - currDate.getTime());
         var diffDays = Math.ceil(diff / (1000 * 3600 * 24));
@@ -1682,13 +1817,17 @@ var ListComponent = /** @class */ (function () {
     };
     ListComponent.prototype.onComplete = function (event) {
         if (this.cachedTaskName != undefined) {
-            this.getTask(this.cachedTaskName).completed = true;
+            var targetTask = this.getTask(this.cachedTaskName);
+            targetTask.completed = true;
+            targetTask.completionDate = new Date();
             this.fileService.emitChange(true);
         }
     };
     ListComponent.prototype.onUndoComplete = function (event) {
         if (this.cachedTaskName != undefined) {
-            this.getTask(this.cachedTaskName).completed = false;
+            var targetTask = this.getTask(this.cachedTaskName);
+            targetTask.completed = false;
+            targetTask.completionDate = null;
             this.fileService.emitChange(true);
         }
     };
@@ -1781,6 +1920,12 @@ var ListComponent = /** @class */ (function () {
     };
     ListComponent.prototype.clearView = function () {
         this.recieveState(null);
+    };
+    ListComponent.prototype.extractDays = function (dayString) {
+        var ageString = dayString;
+        var indexSlice = ageString.indexOf(" days");
+        var days = Number.parseInt(ageString.slice(0, indexSlice));
+        return days;
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])(_angular_material_sort__WEBPACK_IMPORTED_MODULE_4__["MatSort"], { static: true }),
@@ -1965,6 +2110,10 @@ var ProjectToolBarComponent = /** @class */ (function () {
     ProjectToolBarComponent.prototype.getProjects = function () {
         // This function will retrieve the data and use the callback function below
         this.fileService.readFile(this);
+        // TESTING
+        // this.projects = this.dashboardService.getProjects();
+        // this.allProjectsEvent.emit(this.projects);
+        // this.initDashboard();
     };
     ProjectToolBarComponent.prototype.getProjectsCallback = function (data) {
         var parsedObject = JSON.parse(data, this.dateTimeReviver);
@@ -2273,6 +2422,7 @@ var DashboardService = /** @class */ (function () {
             priority: this.randomIntFromInterval(1, 3),
             started: this.randomIntFromInterval(1, 3) === 1 ? false : true,
             completed: taskCompleted == 1 ? true : false,
+            completionDate: taskCompleted == 1 ? new Date("2019-" + this.randomIntFromInterval(1, 12) + "-" + this.randomIntFromInterval(1, 29)) : null,
             rejections: [],
             owner: "Abdo"
         };
@@ -2309,7 +2459,7 @@ var DashboardService = /** @class */ (function () {
     };
     DashboardService.prototype.getProjects = function () {
         var projectList = [];
-        for (var i = 0; i < this.randomIntFromInterval(2, 8); i++) {
+        for (var i = 0; i < this.randomIntFromInterval(4, 8); i++) {
             projectList.push(this.generateRandomProject());
         }
         return projectList;

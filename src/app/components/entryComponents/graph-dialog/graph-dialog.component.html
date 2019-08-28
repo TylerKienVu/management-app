@@ -1,5 +1,14 @@
-<h1 mat-dialog-title>Graph</h1>
 <div mat-dialog-content>  
+  <mat-form-field>
+    <mat-label>
+      Graph Year
+    </mat-label>
+    <mat-select (selectionChange)="onSelectionChange($event.value)" [(ngModel)]="currentYear">
+      <mat-option *ngFor="let year of validYears" [value]="year">
+        {{year}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
   <fusioncharts 
     [width]="width"
     [height]="height"

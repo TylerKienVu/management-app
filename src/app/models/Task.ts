@@ -8,6 +8,7 @@ export class Task {
     priority: number;    
     started: boolean;
     completed: boolean;
+    completionDate: Date;
     rejections: Rejection[];
     owner: string|null;
     

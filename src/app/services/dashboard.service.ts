@@ -34,6 +34,7 @@ export class DashboardService {
             priority: this.randomIntFromInterval(1,3),
             started: this.randomIntFromInterval(1,3) === 1 ? false : true,
             completed: taskCompleted == 1 ? true : false,
+            completionDate: taskCompleted == 1 ? new Date("2019-" + this.randomIntFromInterval(1,12) + "-" + this.randomIntFromInterval(1,29)) : null,
             rejections: [],
             owner: "Abdo"
         }
@@ -79,7 +80,7 @@ export class DashboardService {
 
     getProjects():Project[] {
         let projectList:Project[] = [];
-        for(let i:number = 0; i < this.randomIntFromInterval(2,8); i++) {
+        for(let i:number = 0; i < this.randomIntFromInterval(4,8); i++) {
             projectList.push(this.generateRandomProject());
         }
         return projectList;
