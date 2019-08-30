@@ -150,7 +150,7 @@ module.exports = "<div id=\"sidebar\" class=\"container-fluid\">\n  <div id=\"br
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"toolbar-container\" class=\"container-fluid\">\n  <div class=\"row m-0\">\n    <div class=\"col-sm-12 pl-0\" id=\"project-select-container\">\n      <mat-form-field id=\"project-select\">\n          <mat-label>Select Project</mat-label>\n          <mat-select panelClass=\"selectClass\" (selectionChange)=\"selectProjectTrigger($event.value)\" #projectSelect>\n          <!-- <mat-select panelClass=\"selectClass\" (selectionChange)=\"selectProjectTrigger($event.value)\" [(ngModel)]=\"currentProject.name\"> -->\n            <mat-option *ngIf=\"projects.length === 0\">No Projects Available</mat-option>\n            <mat-option *ngFor=\"let project of projects\" [value]=\"project.name\">\n              {{project.name}}\n            </mat-option>\n          </mat-select>\n        </mat-form-field>\n        <button class=\"btn ml-5 toolbar-btn hvr-grow\" (click)=openAddTaskDialog()>\n          <div class=\"d-flex align-items-center\">\n              <i class=\"fas fa-plus mr-2 button-icon\"></i>Add Task\n          </div>          \n        </button>\n        <button class=\"btn ml-4 toolbar-btn hvr-grow\" (click)=\"openManageProjectDialog()\">\n          <div class=\"d-flex align-items-center\">\n              <i class=\"fas fa-cog mr-2 button-icon\"></i>Manage Project\n          </div>            \n        </button>\n        <button class=\"btn ml-4 toolbar-btn hvr-grow\" (click)=\"openGraphDialog()\">\n          <div class=\"d-flex align-items-center\">\n              <i class=\"fas fa-chart-bar mr-2 button-icon\"></i>Export Graph\n          </div>            \n        </button>\n        <!-- <button mat-flat-button color=\"primary\" class=\"ml-5 toolbar-btn hvr-grow\">Add Task</button> -->\n        <!-- <button mat-flat-button color=\"primary\" class=\"ml-2 toolbar-btn hvr-grow\">Manage Project</button> -->\n        <i class=\"fas fa-search ml-5\"></i>\n        <mat-form-field id=\"filter-form\" class=\"ml-1\">          \n          <input matInput (keyup)=\"applyFilter($event.target.value)\" placeholder=\"Search for a task...\">\n        </mat-form-field>\n    </div>\n  </div>\n</div>"
+module.exports = "<div id=\"toolbar-container\" class=\"container-fluid\">\n  <div class=\"row m-0\">\n    <div class=\"col-sm-12 pl-0\" id=\"project-select-container\">\n      <mat-form-field id=\"project-select\">\n          <mat-label>Select Project</mat-label>\n          <mat-select panelClass=\"selectClass\" (selectionChange)=\"selectProjectTrigger($event.value)\" #projectSelect>\n          <!-- <mat-select panelClass=\"selectClass\" (selectionChange)=\"selectProjectTrigger($event.value)\" [(ngModel)]=\"currentProject.name\"> -->\n            <mat-option *ngIf=\"projects.length === 0\">No Projects Available</mat-option>\n            <mat-option *ngFor=\"let project of projects\" [value]=\"project.name\">\n              {{project.name}}\n            </mat-option>\n          </mat-select>\n        </mat-form-field>\n        <button class=\"btn ml-5 toolbar-btn hvr-grow\" (click)=openAddTaskDialog()>\n          <div class=\"d-flex align-items-center\">\n              <i class=\"fas fa-plus mr-2 button-icon\"></i>Add Task\n          </div>          \n        </button>\n        <button class=\"btn ml-4 toolbar-btn hvr-grow\" (click)=\"openManageProjectDialog()\">\n          <div class=\"d-flex align-items-center\">\n              <i class=\"fas fa-cog mr-2 button-icon\"></i>Manage Project\n          </div>                    \n        </button>\n        <!-- <button class=\"btn ml-4 toolbar-btn hvr-grow\" (click)=\"openGraphDialog()\"> -->\n        <button [matMenuTriggerFor]=\"exportMenu\" class=\"btn ml-4 toolbar-btn hvr-grow\" data-toggle=\"tooltip\" data-placement=\"left\" title=\"Export Options\">\n          <div class=\"d-flex align-items-center\">\n              <i class=\"fas fa-chart-bar mr-2 button-icon\"></i>Export\n          </div>            \n        </button>\n        <mat-menu #exportMenu=\"matMenu\">\n          <button mat-menu-item (click)=\"openGraphDialog()\">Generate Graph</button>\n          <button mat-menu-item (click)=\"exportToExcel()\">Export to Excel</button>\n        </mat-menu>\n        <!-- <button mat-flat-button color=\"primary\" class=\"ml-5 toolbar-btn hvr-grow\">Add Task</button> -->\n        <!-- <button mat-flat-button color=\"primary\" class=\"ml-2 toolbar-btn hvr-grow\">Manage Project</button> -->\n        <i class=\"fas fa-search ml-5\"></i>\n        <mat-form-field id=\"filter-form\" class=\"ml-1\">          \n          <input matInput (keyup)=\"applyFilter($event.target.value)\" placeholder=\"Search for a task...\">\n        </mat-form-field>\n    </div>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -2048,6 +2048,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _entryComponents_manage_project_dialog_manage_project_dialog_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../entryComponents/manage-project-dialog/manage-project-dialog.component */ "./src/app/components/entryComponents/manage-project-dialog/manage-project-dialog.component.ts");
 /* harmony import */ var _services_file_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../services/file.service */ "./src/app/services/file.service.ts");
 /* harmony import */ var _entryComponents_graph_dialog_graph_dialog_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../entryComponents/graph-dialog/graph-dialog.component */ "./src/app/components/entryComponents/graph-dialog/graph-dialog.component.ts");
+/* harmony import */ var src_app_services_excel_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! src/app/services/excel.service */ "./src/app/services/excel.service.ts");
 
 
 
@@ -2056,15 +2057,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// TODO: There is a bug with the project select on startup. The value is empty
+
 var ProjectToolBarComponent = /** @class */ (function () {
-    function ProjectToolBarComponent(dashboardService, dialog, fileService, cdr, ngZone) {
+    function ProjectToolBarComponent(dashboardService, dialog, fileService, cdr, ngZone, excelService) {
         var _this = this;
         this.dashboardService = dashboardService;
         this.dialog = dialog;
         this.fileService = fileService;
         this.cdr = cdr;
         this.ngZone = ngZone;
+        this.excelService = excelService;
         this.selectProjectEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.filterEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.addTaskEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
@@ -2085,10 +2087,6 @@ var ProjectToolBarComponent = /** @class */ (function () {
             _this.writeToFile();
             _this.allProjectsEvent.emit();
             _this.selectProjectEvent.emit(_this.currentProject);
-            // console.log("hit save");
-            // this.allProjectsEvent.emit(this.projects);
-            // // Whenever there is a change that neesd to be saved, it will hit here
-            // this.writeToFileEvent.emit();
         });
     }
     ProjectToolBarComponent.prototype.ngOnInit = function () {
@@ -2206,6 +2204,9 @@ var ProjectToolBarComponent = /** @class */ (function () {
         var jsonData = JSON.stringify(this.projects);
         this.fileService.writeToFile(jsonData);
     };
+    ProjectToolBarComponent.prototype.exportToExcel = function () {
+        this.excelService.exportProjectsAsExcel(this.projects);
+    };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"])
@@ -2240,7 +2241,8 @@ var ProjectToolBarComponent = /** @class */ (function () {
             template: __webpack_require__(/*! raw-loader!./project-tool-bar.component.html */ "./node_modules/raw-loader/index.js!./src/app/components/project-tool-bar/project-tool-bar.component.html"),
             styles: [__webpack_require__(/*! ./project-tool-bar.component.scss */ "./src/app/components/project-tool-bar/project-tool-bar.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_dashboard_service__WEBPACK_IMPORTED_MODULE_2__["DashboardService"], _angular_material_dialog__WEBPACK_IMPORTED_MODULE_3__["MatDialog"], _services_file_service__WEBPACK_IMPORTED_MODULE_6__["FileService"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_dashboard_service__WEBPACK_IMPORTED_MODULE_2__["DashboardService"], _angular_material_dialog__WEBPACK_IMPORTED_MODULE_3__["MatDialog"], _services_file_service__WEBPACK_IMPORTED_MODULE_6__["FileService"],
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"], src_app_services_excel_service__WEBPACK_IMPORTED_MODULE_8__["ExcelService"]])
     ], ProjectToolBarComponent);
     return ProjectToolBarComponent;
 }());
@@ -2477,6 +2479,96 @@ var DashboardService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/services/excel.service.ts":
+/*!*******************************************!*\
+  !*** ./src/app/services/excel.service.ts ***!
+  \*******************************************/
+/*! exports provided: ExcelService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExcelService", function() { return ExcelService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var xlsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! xlsx */ "./node_modules/xlsx/xlsx.js");
+/* harmony import */ var xlsx__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(xlsx__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+var ExcelService = /** @class */ (function () {
+    function ExcelService() {
+    }
+    ExcelService_1 = ExcelService;
+    ExcelService.toExportFileName = function (excelFileName) {
+        return excelFileName + "_export_" + new Date().getTime() + ".xlsx";
+    };
+    // Formats the projects into an exportable format
+    ExcelService.prototype.exportProjectsAsExcel = function (projects) {
+        var e_1, _a;
+        var workbook = xlsx__WEBPACK_IMPORTED_MODULE_2__["utils"].book_new();
+        try {
+            for (var projects_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__values"](projects), projects_1_1 = projects_1.next(); !projects_1_1.done; projects_1_1 = projects_1.next()) {
+                var project = projects_1_1.value;
+                var preparedProject = this.prepareProjectForExport(project);
+                var worksheet = xlsx__WEBPACK_IMPORTED_MODULE_2__["utils"].json_to_sheet(preparedProject);
+                xlsx__WEBPACK_IMPORTED_MODULE_2__["utils"].book_append_sheet(workbook, worksheet, project.name);
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (projects_1_1 && !projects_1_1.done && (_a = projects_1.return)) _a.call(projects_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        xlsx__WEBPACK_IMPORTED_MODULE_2__["writeFile"](workbook, ExcelService_1.toExportFileName("test"));
+    };
+    ExcelService.prototype.prepareProjectForExport = function (project) {
+        var e_2, _a;
+        var result = [];
+        var tasks = project.tasks;
+        try {
+            for (var tasks_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__values"](tasks), tasks_1_1 = tasks_1.next(); !tasks_1_1.done; tasks_1_1 = tasks_1.next()) {
+                var task = tasks_1_1.value;
+                var object = {
+                    name: task.name,
+                    description: task.description,
+                    dateCreated: task.dateCreated,
+                    dueDate: task.dueDate,
+                    priority: task.priority,
+                    started: task.started,
+                    completed: task.completed,
+                    completionDate: task.completionDate,
+                    owner: task.owner,
+                    numberOfRejections: task.rejections.length
+                };
+                result.push(object);
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (tasks_1_1 && !tasks_1_1.done && (_a = tasks_1.return)) _a.call(tasks_1);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        return result;
+    };
+    var ExcelService_1;
+    ExcelService = ExcelService_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], ExcelService);
+    return ExcelService;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/services/file.service.ts":
 /*!******************************************!*\
   !*** ./src/app/services/file.service.ts ***!
@@ -2515,6 +2607,12 @@ var FileService = /** @class */ (function () {
     FileService.prototype.writeToFile = function (jsonData) {
         this.ipc.send("write", { data: jsonData });
     };
+    FileService.prototype.exportToExcel = function (jsonData, component) {
+        // this.ipc.send("export", {data:jsonData})
+        // this.ipc.on('exportResponse', function (event, data) {
+        //   component.downloadFile(data);
+        // })
+    };
     // Gets the data from the file and uses the component ref to callback a function once data is retrieved
     FileService.prototype.readFile = function (component) {
         this.ipc.send("read");
@@ -2524,6 +2622,44 @@ var FileService = /** @class */ (function () {
     };
     FileService.prototype.emitChange = function (needToUpdate) {
         this.emitChangeSource.next(needToUpdate);
+    };
+    FileService.prototype.exportToCsv = function (filename, rows) {
+        if (!rows || !rows.length) {
+            return;
+        }
+        var separator = ',';
+        var keys = Object.keys(rows[0]);
+        var csvContent = keys.join(separator) +
+            '\n' +
+            rows.map(function (row) {
+                return keys.map(function (k) {
+                    var cell = row[k] === null || row[k] === undefined ? '' : row[k];
+                    cell = cell instanceof Date
+                        ? cell.toLocaleString()
+                        : cell.toString().replace(/"/g, '""');
+                    if (cell.search(/("|,|\n)/g) >= 0) {
+                        cell = "\"" + cell + "\"";
+                    }
+                    return cell;
+                }).join(separator);
+            }).join('\n');
+        var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        if (navigator.msSaveBlob) { // IE 10+
+            navigator.msSaveBlob(blob, filename);
+        }
+        else {
+            var link = document.createElement('a');
+            if (link.download !== undefined) {
+                // Browsers that support HTML5 download attribute
+                var url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
     };
     FileService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -2601,6 +2737,39 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 
 module.exports = __webpack_require__(/*! C:\Users\tyler\Documents\My Stuff\Personal\Code\Safran\manager-app\src\main.ts */"./src/main.ts");
 
+
+/***/ }),
+
+/***/ 1:
+/*!********************!*\
+  !*** fs (ignored) ***!
+  \********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/* (ignored) */
+
+/***/ }),
+
+/***/ 2:
+/*!************************!*\
+  !*** crypto (ignored) ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/* (ignored) */
+
+/***/ }),
+
+/***/ 3:
+/*!************************!*\
+  !*** stream (ignored) ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/* (ignored) */
 
 /***/ })
 

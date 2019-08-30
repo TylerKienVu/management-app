@@ -19,13 +19,18 @@
         <button class="btn ml-4 toolbar-btn hvr-grow" (click)="openManageProjectDialog()">
           <div class="d-flex align-items-center">
               <i class="fas fa-cog mr-2 button-icon"></i>Manage Project
-          </div>            
+          </div>                    
         </button>
-        <button class="btn ml-4 toolbar-btn hvr-grow" (click)="openGraphDialog()">
+        <!-- <button class="btn ml-4 toolbar-btn hvr-grow" (click)="openGraphDialog()"> -->
+        <button [matMenuTriggerFor]="exportMenu" class="btn ml-4 toolbar-btn hvr-grow" data-toggle="tooltip" data-placement="left" title="Export Options">
           <div class="d-flex align-items-center">
-              <i class="fas fa-chart-bar mr-2 button-icon"></i>Export Graph
+              <i class="fas fa-chart-bar mr-2 button-icon"></i>Export
           </div>            
         </button>
+        <mat-menu #exportMenu="matMenu">
+          <button mat-menu-item (click)="openGraphDialog()">Generate Graph</button>
+          <button mat-menu-item (click)="exportToExcel()">Export to Excel</button>
+        </mat-menu>
         <!-- <button mat-flat-button color="primary" class="ml-5 toolbar-btn hvr-grow">Add Task</button> -->
         <!-- <button mat-flat-button color="primary" class="ml-2 toolbar-btn hvr-grow">Manage Project</button> -->
         <i class="fas fa-search ml-5"></i>

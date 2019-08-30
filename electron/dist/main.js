@@ -5,8 +5,10 @@ var path = require("path");
 var url = require("url");
 var win;
 var filePath = __dirname + "\\..\\..\\data.json";
+var exportPath = __dirname + "\\..\\..\\export.xlsx";
 // const filePath:string = __dirname + "\\..\\..\\src\\assets\\data\\data.json";
 var fs = require('fs');
+var json2xls = require('json2xls');
 electron_1.app.on('ready', createWindow);
 electron_1.app.on('activate', function () {
     if (win === null) {
@@ -20,12 +22,21 @@ electron_1.ipcMain.on('write', function (event, data) {
         if (err) {
             console.log("An error occured when writing: " + err.message);
         }
-        console.log("The file has saved successfully");
+        else {
+            console.log("The file has saved successfully");
+        }
     });
-    // console.log(data);
-    // console.log(__dirname + "\\..\\..\\src\\assets\\data\\data.json");
-    // const files = fs.readdirSync(__dirname)
-    // win.webContents.send('getFilesResponse', files)
+});
+electron_1.ipcMain.on('export', function (event, data) {
+    var xls = json2xls(data.data);
+    fs.writeFile(exportPath, xls, function (err) {
+        if (err) {
+            console.log("An error occured when writing: " + err.message);
+        }
+        else {
+            console.log("The file has exported successfully");
+        }
+    });
 });
 electron_1.ipcMain.on('read', function (event) {
     fs.readFile(filePath, 'utf-8', function (err, data) {

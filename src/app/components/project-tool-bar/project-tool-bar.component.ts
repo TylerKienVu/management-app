@@ -7,8 +7,7 @@ import { AddTaskDialogComponent } from '../entryComponents/add-task-dialog/add-t
 import { ManageProjectDialogComponent } from '../entryComponents/manage-project-dialog/manage-project-dialog.component';
 import { FileService } from '../../services/file.service';
 import { GraphDialogComponent } from '../entryComponents/graph-dialog/graph-dialog.component';
-
-// TODO: There is a bug with the project select on startup. The value is empty
+import { ExcelService } from 'src/app/services/excel.service';
 
 @Component({
   selector: 'app-project-tool-bar',
@@ -24,17 +23,14 @@ export class ProjectToolBarComponent implements OnInit {
   @Output() writeToFileEvent:EventEmitter<null> = new EventEmitter<null>();
   @ViewChild('projectSelect', {static:false}) projectSelect;
   projects:Project[] = [];
-  currentProject:Project;
+  currentProject:Project;  
 
-  constructor(private dashboardService:DashboardService, public dialog:MatDialog, private fileService:FileService, private cdr:ChangeDetectorRef, private ngZone:NgZone) {
+  constructor(private dashboardService:DashboardService, public dialog:MatDialog, private fileService:FileService,
+     private cdr:ChangeDetectorRef, private ngZone:NgZone, private excelService:ExcelService) {
     fileService.changeEmitted$.subscribe( changeFlag => {
       this.writeToFile();
       this.allProjectsEvent.emit()
       this.selectProjectEvent.emit(this.currentProject);
-      // console.log("hit save");
-      // this.allProjectsEvent.emit(this.projects);
-      // // Whenever there is a change that neesd to be saved, it will hit here
-      // this.writeToFileEvent.emit();
     });
   }
 
@@ -190,6 +186,10 @@ export class ProjectToolBarComponent implements OnInit {
   writeToFile():void {
     let jsonData:string = JSON.stringify(this.projects);
     this.fileService.writeToFile(jsonData);
+  }
+
+  exportToExcel():void {
+    this.excelService.exportProjectsAsExcel(this.projects);
   }
 
 }

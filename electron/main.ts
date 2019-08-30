@@ -4,8 +4,10 @@ import * as url from 'url'
 
 let win: BrowserWindow;
 const filePath:string = __dirname + "\\..\\..\\data.json";
+const exportPath:string = __dirname + "\\..\\..\\export.xlsx";
 // const filePath:string = __dirname + "\\..\\..\\src\\assets\\data\\data.json";
 const fs = require('fs');
+const json2xls = require('json2xls');
 
 app.on('ready', createWindow);
 
@@ -23,14 +25,22 @@ ipcMain.on('write', (event, data) => {
         if(err){
             console.log("An error occured when writing: " + err.message);
         }
-
-        console.log("The file has saved successfully");
+        else{
+            console.log("The file has saved successfully");
+        }        
     })
+})
 
-    // console.log(data);
-    // console.log(__dirname + "\\..\\..\\src\\assets\\data\\data.json");
-    // const files = fs.readdirSync(__dirname)
-    // win.webContents.send('getFilesResponse', files)
+ipcMain.on('export', (event, data) => {
+    var xls = json2xls(data.data);
+    fs.writeFile(exportPath, xls, (err) => {
+        if(err){
+            console.log("An error occured when writing: " + err.message);
+        }
+        else {
+            console.log("The file has exported successfully")
+        }
+    })
 })
 
 ipcMain.on('read', (event) => {
