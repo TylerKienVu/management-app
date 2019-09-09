@@ -1,0 +1,175 @@
+.fill-container{
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.drop-list {
+    overflow-y: auto;
+    max-height: 70vh;
+    min-height: 10vh;
+    padding-right: 1em;
+}
+
+.drag-card {
+    cursor: move;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.card-toolbar {
+    width: 100%;
+}
+
+.priority-header {
+    display: inline-block;
+    padding: 1em;
+    height: 20px;
+    width: 10em;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 1em;
+    margin-right: 0;
+    text-align: center;
+}
+
+.priority-text {
+    display: block;
+    position: relative;
+    bottom: 10px;
+}
+
+.low-priority {
+    background-color: limegreen;
+}
+
+.med-priority {
+    background-color: darkorange;
+}
+
+.high-priority {
+    background-color: red;
+}
+
+.card-title {
+    font-size: 25px;
+    font-weight: bold;
+    overflow-wrap: normal;
+}
+
+.card-subtitle {
+    font-size: 18px;
+    font-weight: bold;
+    overflow-wrap: normal;
+}
+
+.card-content {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+// .task-menu-img {
+//     font-size: 4em;
+// }
+
+.section-menu-img {
+    max-height: 30px;
+}
+
+.card-menu-img {
+    max-height: 20px;
+}
+
+.section-menu {
+    padding: 0;
+}
+
+.section-header {
+    display: inline-block;
+    margin-bottom: 0.5em;
+    width: 100%;
+}
+
+.section-title {    
+    font-weight: 400;
+    font-size: 2em;    
+}
+
+.section-container {
+    margin-left: 1em;
+    margin-right: 1em;
+    padding: 1em;
+    background-color: rgb(250,250,250);
+}
+
+#dashboard-toolbar {
+    height: 10%;
+}
+
+#not-started-container {
+    border-top: 7px solid;
+    border-image-source: linear-gradient(to right, red, salmon);
+    border-image-slice: 1;
+}
+
+#in-progress-container {
+    border-top: 7px solid;
+    border-image-source: linear-gradient(to right, darkorange, gold);
+    border-image-slice: 1;
+}
+
+#completed-container {
+    border-top: 7px solid;
+    border-image-source: linear-gradient(to right, limegreen, lime);
+    border-image-slice: 1;
+}
+
+#main-content-container {
+    background-color: rgb(238,238,238);
+    width: 100%;
+    height: 100%;
+}
+
+#content-container {
+    height: 100%;
+    width: 95%;
+    padding: 0;
+}
+
+#project-select {
+    margin-left: 1em;
+    margin-top: 0.5em;
+    // margin-bottom: 2em;
+}
+
+#cards-container {
+    width: 100%;
+    height: 100%;
+}
+
+/*Drag and drop styling*/
+
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.drag-card:last-child {
+    border: none;
+}
+
+.drop-list.cdk-drop-list-dragging .drag-card:not( .cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}

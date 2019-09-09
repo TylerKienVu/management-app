@@ -1,0 +1,32 @@
+<div id="main-container" class="container-fluid">
+  <div class="row fill-container">
+    <div id="sidebar" class="col fill-container">
+      <app-nav
+      [projects]="projects"
+      (createProjectEvent)="addProject($event)"></app-nav>
+    </div>
+    <div class="col" style="padding:0;">
+      <div class="container-fluid fill-container">
+        <div id="header" class="row fill-container">
+          <app-header class="fill-container"
+            [projectName]="currentProjectName">
+          </app-header>
+        </div>
+        <div id="project-toolbar" class="row fill-container">
+          <app-project-tool-bar class="fill-container" 
+            (selectProjectEvent)="updateHeaderAndDashboard($event)"
+            (filterEvent)="applyFilter($event)"
+            (addTaskEvent)="addTask($event)"
+            (allProjectsEvent)="saveProjects($event)"
+            (clearViewEvent)="clearView()"
+            (writeToFile)="writeToFile()">
+          </app-project-tool-bar>
+        </div>
+        <div id="content" class="row fill-container">
+          <router-outlet 
+            (activate)="onRouterOutletActivate($event)"></router-outlet>
+        </div>
+      </div>      
+    </div>
+  </div>
+

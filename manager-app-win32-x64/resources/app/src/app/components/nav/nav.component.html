@@ -1,0 +1,33 @@
+<div id="sidebar" class="container-fluid">
+  <div id="brand" class="row nav-img-container">
+    <div class="col-sm-12 d-flex">
+      <img id="safran-logo-img" class="nav-img" src="./assets/imgs/safran-trans.png">
+    </div>
+  </div>
+  <div class="row nav-img-container">
+    <div class="col-sm-12 d-flex justify-content-center">
+      <a routerLink="/dashboard">
+        <i class="fas fa-columns nav-icon hvr-grow" data-toggle="tooltip" data-placement="right" title="Dashboard View"></i>
+      </a>
+    </div>
+  </div>
+  <div class="row nav-img-container">
+    <div class="col-sm-12 d-flex justify-content-center">
+      <a routerLink="/list">
+        <i class="fas fa-list-ul nav-icon hvr-grow" data-toggle="tooltip" data-placement="right" title="List View"></i>
+      </a>
+    </div>
+  </div>
+  <div class="row nav-img-container">
+    <div class="col-sm-12 d-flex justify-content-center">
+      <i class="far fa-plus-square nav-icon hvr-grow" data-toggle="tooltip" data-placement="right" title="Create Project" (click)="openCreateProjectDialog($event)"></i>
+    </div>
+  </div>  
+  <!-- <div class="row nav-img-container">
+    <div class="col-sm-12 d-flex justify-content-center">
+      <a routerLink="">
+        <i class="fas fa-cog nav-icon hvr-grow" data-toggle="tooltip" data-placement="right" title="Settings"></i>
+      </a>
+    </div>
+  </div> -->
+</div>

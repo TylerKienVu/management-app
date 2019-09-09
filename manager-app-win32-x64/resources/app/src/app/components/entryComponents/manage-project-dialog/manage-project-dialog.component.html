@@ -1,0 +1,33 @@
+<h1 mat-dialog-title>Manage Project: {{originalName}}</h1>
+<div mat-dialog-content>  
+  <form id="task-form" #taskForm="ngForm">
+    <mat-error class="mt-1 mb-2" *ngIf="checkForDuplicateName(data.fields.name)">That name is taken.</mat-error>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Project Name" required cdkFocusInitial [(ngModel)]="data.fields.name" #name="ngModel" name="projectName">
+      <mat-error *ngIf="name.invalid && name.errors.required">Name is required.</mat-error>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <textarea matInput placeholder="Project Description" [(ngModel)]="data.fields.description" name="taskDescription"></textarea>
+    </mat-form-field>
+    <mat-form-field class="half-width">
+      <mat-label>Priority Level</mat-label>
+      <mat-select panelClass="selectClass" [(ngModel)]="data.fields.priority" #priority="ngModel" name="projectPriority">
+        <mat-option [value]="null">None</mat-option>
+        <mat-option [value]="1">Low Priority</mat-option>
+        <mat-option [value]="2">Medium Priority</mat-option>
+        <mat-option [value]="3">High Priority</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="half-width">
+      <input matInput [matDatepicker]="picker" placeholder="Choose a Due Date" [(ngModel)]="data.fields.dueDate" #date="ngModel" name="projectDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>  
+  <button mat-button [mat-dialog-close]="data.fields" class="ml-auto" color="primary" [disabled]="taskForm.form.invalid || checkForDuplicateName(data.fields.name)">Save</button>
+  <button mat-button color="warn" (click)="onDeleteClick()">Delete</button>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+</div>
+

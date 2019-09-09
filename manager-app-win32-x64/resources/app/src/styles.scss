@@ -1,0 +1,39 @@
+@import "./assets/styles/hover/scss/hover.scss";
+
+/* You can add global styles to this file, and also import other style files */
+body {
+    height: 100vh;
+    overflow: hidden;
+}
+
+button:focus {
+    outline: none;
+}
+
+a:focus {
+    outline: none;
+}
+
+.cdk-overlay-container .cdk-overlay-pane .selectClass{
+    margin-top: 3em;
+ }
+
+ #project-select {
+     font-size: 1.5em;
+     width: 300px;
+ }
+
+ .mat-card-header-text {
+    margin: 0 !important;
+}
+
+.form-control:focus {
+    box-shadow: none;
+}
+
+router-outlet + * {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}

@@ -1,0 +1,35 @@
+<h1 mat-dialog-title>Add Task to Project: {{data.project.name}}</h1>
+<div mat-dialog-content>  
+  <form id="task-form" #taskForm="ngForm">    
+    <mat-error class="mt-1 mb-2" *ngIf="checkForDuplicateName(data.fields.name)">That name is taken.</mat-error>
+    <mat-form-field class="full-width">      
+      <input matInput placeholder="Task Name" required cdkFocusInitial [(ngModel)]="data.fields.name" #name="ngModel" name="taskName">
+      <mat-error *ngIf="(name.invalid && name.errors.required)">Name is required.</mat-error>      
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <textarea matInput placeholder="Task Description" [(ngModel)]="data.fields.description" name="taskDescription"></textarea>
+    </mat-form-field>
+    <mat-form-field class="half-width">
+      <input matInput placeholder="Task Owner" [(ngModel)]="data.fields.owner" name="taskOwner">
+    </mat-form-field>
+    <mat-form-field class="half-width">
+      <mat-label>Priority Level</mat-label>
+      <mat-select panelClass="selectClass" required [(ngModel)]="data.fields.priority" #priority="ngModel" name="taskPriority">
+        <mat-option [value]="1">Low Priority</mat-option>
+        <mat-option [value]="2">Medium Priority</mat-option>
+        <mat-option [value]="3">High Priority</mat-option>
+      </mat-select>
+      <mat-error *ngIf="priority.invalid && priority.errors.required">Priority is required.</mat-error>
+    </mat-form-field>
+    <mat-form-field class="half-width">
+      <input matInput [matDatepicker]="picker" placeholder="Choose a Due Date" required [(ngModel)]="data.fields.dueDate" #date="ngModel" name="taskDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="date.invalid && date.errors.required">Due Date is required.</mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>  
+  <button mat-button [mat-dialog-close]="data.fields" class="ml-auto" color="primary" [disabled]="taskForm.form.invalid || checkForDuplicateName(data.name)">Create</button>  
+  <button mat-button (click)="onNoClick()">Cancel</button>
+</div>

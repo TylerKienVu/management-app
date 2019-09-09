@@ -1,0 +1,17 @@
+.full-width {
+    display: block;
+    width: 100%;
+    padding-bottom: 10px;
+}
+
+.half-width {
+    display: block;
+    width: 50%;
+    padding-bottom: 10px;
+}
+
+#task-form {
+    max-width: 150px;
+    min-width: 500px;
+    width: 100%;
+}

@@ -1,0 +1,23 @@
+<div mat-dialog-content>  
+  <mat-form-field>
+    <mat-label>
+      Graph Year
+    </mat-label>
+    <mat-select (selectionChange)="onSelectionChange($event.value)" [(ngModel)]="currentYear">
+      <mat-option *ngFor="let year of validYears" [value]="year">
+        {{year}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <fusioncharts 
+    [width]="width"
+    [height]="height"
+    [type]="type"
+    [dataFormat]="dataFormat"
+    [dataSource]="dataSource">
+  </fusioncharts>
+</div>
+<div mat-dialog-actions>  
+  <!-- <button mat-button [mat-dialog-close]="data.fields" class="ml-auto" color="primary" [disabled]="taskForm.form.invalid || checkForDuplicateName(data.name)">Create</button>   -->
+  <button mat-button class="ml-auto" (click)="onNoClick()">Close</button>
+</div>
