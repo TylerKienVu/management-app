@@ -43,7 +43,7 @@
     "core-js": "^2.5.4",
     "file-saver": "^2.0.2",
     "fusioncharts": "^3.14.0-sr.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "json2xls": "^0.1.2",
     "popper.js": "^1.15.0",
     "rxjs": "~6.5.2",
